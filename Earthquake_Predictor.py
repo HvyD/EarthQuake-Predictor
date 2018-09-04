@@ -12,94 +12,51 @@ import pandas as pd
 import tensorflow as tf
 
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[2]:
 
 
 data = pd.read_csv("data/earthquake_data.csv")
-
-
-# In[3]:
-
-
-data.head()
-
-
-# In[4]:
-
-
-data.Type.value_counts()
-
-
-# In[5]:
-
-
-data.isnull().sum()
-
-
-# In[6]:
 
 
 col1 = data[["Latitude","Longitude", "Depth"]]
 col2= data["Magnitude"]
 
 
-# In[7]:
-
-
-col1.head()
-col2.head()
-
-
-# In[8]:
 
 
 InputX = col1.as_matrix()
 Inputy = col2.as_matrix()
 
 
-# In[9]:
 
 
-print(Inputy)
-
-
-# In[10]:
 
 
 InputX.astype(float, copy = False)
 Inputy.astype(float, copy = False)
 
 
-# In[11]:
+
 
 
 X_min = np.amin(InputX,0)
 X_max = np.amax(InputX,0)
 y_min = np.amin(Inputy,0)
 y_max = np.amax(Inputy,0)
-print("X_minimum", X_min)
-print("X_maximum", X_max)
-print("y_minimum", y_min)
-print("y_maximum", y_max)
 
 
-# In[12]:
+
 
 
 InputX_norm = (InputX-X_min)/ (X_max-X_min)
-print(InputX_norm)
 
 
-# In[13]:
+
+
 
 
 Inputy_norm = Inputy
-
-
-# In[14]:
 
 
 X_feature = 3
@@ -109,47 +66,35 @@ InputX_reshape = np.resize(InputX_norm,(sample,X_feature))
 Inputy_reshape = np.resize(Inputy_norm,(sample,y_feature))
 
 
-# In[15]:
-
-
-print(InputX_reshape.shape)
-print(Inputy_norm.shape)
-
-
-# In[16]:
-
 
 batch_size = 20000
 InputX_train = InputX_reshape[0:batch_size,:]
 InputX_train.shape
 
 
-# In[17]:
+
 
 
 Inputy_train = Inputy_reshape[0:batch_size,:]
-Inputy_train.shape
 
 
-# In[18]:
+
 
 
 v_size = 2500
 InputX_test = InputX_reshape[batch_size: batch_size+v_size,:]
-InputX_test.shape
 
 
-# In[19]:
+
 
 
 Inputy_test = Inputy_reshape[batch_size: batch_size+v_size,:]
-Inputy_test.shape
+
 
 
 # ### Build and Train Model
 
-# In[20]:
-
+print("Building Model........")
 
 learning_rate = 0.01
 training_iterations = 10000
@@ -187,7 +132,6 @@ train_step = tf.train.AdamOptimizer(learning_rate).minimize(mean_sq)
 saver = tf.train.Saver()
 
 
-# In[21]:
 
 
 init = tf.global_variables_initializer()
@@ -208,7 +152,6 @@ with tf.Session() as sess:
 
 # ### Make Prediction
 
-# In[22]:
 
 
 lat = input("Enter latitude between -77 to 86 :")
